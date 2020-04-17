@@ -10,7 +10,7 @@ function isWebpackReady(getModuleIds) {
     return false;
   }
 
-  return getModuleIds().every(moduleId => {
+  return getModuleIds().every((moduleId) => {
     return (
       typeof moduleId !== "undefined" &&
       typeof __webpack_modules__[moduleId] !== "undefined"
@@ -24,16 +24,16 @@ function load(loader) {
   let state = {
     loading: true,
     loaded: null,
-    error: null
+    error: null,
   };
 
   state.promise = promise
-    .then(loaded => {
+    .then((loaded) => {
       state.loading = false;
       state.loaded = loaded;
       return loaded;
     })
-    .catch(err => {
+    .catch((err) => {
       state.loading = false;
       state.error = err;
       throw err;
@@ -46,13 +46,13 @@ function loadMap(obj) {
   let state = {
     loading: false,
     loaded: {},
-    error: null
+    error: null,
   };
 
   let promises = [];
 
   try {
-    Object.keys(obj).forEach(key => {
+    Object.keys(obj).forEach((key) => {
       let result = load(obj[key]);
 
       if (!result.loading) {
@@ -65,10 +65,10 @@ function loadMap(obj) {
       promises.push(result.promise);
 
       result.promise
-        .then(res => {
+        .then((res) => {
           state.loaded[key] = res;
         })
-        .catch(err => {
+        .catch((err) => {
           state.error = err;
         });
     });
@@ -77,11 +77,11 @@ function loadMap(obj) {
   }
 
   state.promise = Promise.all(promises)
-    .then(res => {
+    .then((res) => {
       state.loading = false;
       return res;
     })
-    .catch(err => {
+    .catch((err) => {
       state.loading = false;
       throw err;
     });
@@ -110,7 +110,7 @@ function createLoadableComponent(loadFn, options) {
       timeout: null,
       render: render,
       webpack: null,
-      modules: null
+      modules: null,
     },
     options
   );
@@ -144,21 +144,21 @@ function createLoadableComponent(loadFn, options) {
         pastDelay: false,
         timedOut: false,
         loading: res.loading,
-        loaded: res.loaded
+        loaded: res.loaded,
       };
     }
 
     static contextTypes = {
       loadable: PropTypes.shape({
-        report: PropTypes.func.isRequired
-      })
+        report: PropTypes.func.isRequired,
+      }),
     };
 
     static preload() {
       return init();
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
       this._loadModule();
     }
 
@@ -168,7 +168,7 @@ function createLoadableComponent(loadFn, options) {
 
     _loadModule() {
       if (this.context.loadable && Array.isArray(opts.modules)) {
-        opts.modules.forEach(moduleName => {
+        opts.modules.forEach((moduleName) => {
           this.context.loadable.report(moduleName);
         });
       }
@@ -183,9 +183,9 @@ function createLoadableComponent(loadFn, options) {
         }
 
         this.setState(newState);
-      }
+      };
 
-      if (typeof opts.delay === 'number') {
+      if (typeof opts.delay === "number") {
         if (opts.delay === 0) {
           this.setState({ pastDelay: true });
         } else {
@@ -205,7 +205,7 @@ function createLoadableComponent(loadFn, options) {
         setStateWithMountCheck({
           error: res.error,
           loaded: res.loaded,
-          loading: res.loading
+          loading: res.loading,
         });
 
         this._clearTimeouts();
@@ -216,7 +216,7 @@ function createLoadableComponent(loadFn, options) {
           update();
           return null;
         })
-        .catch(err => {
+        .catch((err) => {
           update();
           return null;
         });
@@ -245,7 +245,7 @@ function createLoadableComponent(loadFn, options) {
           pastDelay: this.state.pastDelay,
           timedOut: this.state.timedOut,
           error: this.state.error,
-          retry: this.retry
+          retry: this.retry,
         });
       } else if (this.state.loaded) {
         return opts.render(this.state.loaded, this.props);
@@ -272,20 +272,20 @@ Loadable.Map = LoadableMap;
 
 class Capture extends React.Component {
   static propTypes = {
-    report: PropTypes.func.isRequired
+    report: PropTypes.func.isRequired,
   };
 
   static childContextTypes = {
     loadable: PropTypes.shape({
-      report: PropTypes.func.isRequired
-    }).isRequired
+      report: PropTypes.func.isRequired,
+    }).isRequired,
   };
 
   getChildContext() {
     return {
       loadable: {
-        report: this.props.report
-      }
+        report: this.props.report,
+      },
     };
   }
 
